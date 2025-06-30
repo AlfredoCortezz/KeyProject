@@ -10,4 +10,10 @@ Instrucciones claras para compilar y ejecutar el proyecto:
     PASO 2: salir del entorno > cd.. > cd.. dos veces 
     PASO 3: Entrar al proyecto > cd GestionReservas 
     PASO 4: Ejecutar y abrir el enlace > python manage.py runserver > seleccionar tu url 
-    
+Detalles sobre las librerías necesarias, si las hubiera: 
+    DESCARGAR librerías python:
+      Os
+      Pathlib
+      Sys
+      Datetime
+      Calendar
