@@ -11,15 +11,21 @@
     * {
       box-sizing: border-box;
     }
+
+    html, body {
+      height: auto;
+      min-height: 100vh;
+    }
+
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
       background: linear-gradient(135deg, #1f2029 0%, #102770 100%);
       color: #c4c3ca;
       display: flex;
-      height: 100vh;
       align-items: center;
       justify-content: center;
+      padding: 40px 20px;
     }
 
     a {
@@ -31,14 +37,13 @@
       background: #2a2b38cc;
       border-radius: 12px;
       width: 400px;
-      max-width: 90vw;
+      max-width: 100%;
       box-shadow: 0 10px 30px rgba(0,0,0,0.5);
       overflow: hidden;
       position: relative;
       perspective: 1200px;
     }
 
-    /* Checkbox oculto para toggle */
     #reg-log {
       display: none;
     }
@@ -54,7 +59,6 @@
       transform: rotateY(180deg);
     }
 
-    /* Front y back */
     .card-front, .card-back {
       background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/1462889/pat.svg') bottom center no-repeat;
       background-size: 300%;
@@ -63,8 +67,10 @@
       width: 100%;
       backface-visibility: hidden;
       position: absolute;
-      top: 0; left: 0;
-      height: 100%;
+      top: 0;
+      left: 0;
+      height: auto;
+      min-height: 100%;
       box-sizing: border-box;
       color: #fff;
     }
