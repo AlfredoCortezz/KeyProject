@@ -20,30 +20,26 @@ def logout_view(request):
 def login_register_view(request):
     if request.method == 'POST':
         if 'logemail' in request.POST:
-            email = request.POST.get('logemail')
+            # LOGIN
+            email = request.POST.get('logemail').lower().strip()
             password = request.POST.get('logpass')
-            try:
-                user = User.objects.get(email=email)
-                user = authenticate(request, username=user.username, password=password)
-            except User.DoesNotExist:
-                user = None
-
-            if user:
+            user = authenticate(request, username=email, password=password)
+            if user is not None:
                 login(request, user)
                 return redirect('inicio')
             else:
                 return render(request, 'Reservas/login.html', {'error': 'Credenciales inválidas'})
 
         elif 'regemail' in request.POST:
+            # REGISTRO
             name = request.POST.get('regname')
-            email = request.POST.get('regemail')
+            email = request.POST.get('regemail').lower().strip()
             password = request.POST.get('regpass')
 
-            if User.objects.filter(email=email).exists():
+            if User.objects.filter(username=email).exists():
                 return render(request, 'Reservas/login.html', {'error': 'Correo ya registrado'})
 
-            username = email.split('@')[0]
-            user = User.objects.create_user(username=username, email=email, password=password, first_name=name)
+            user = User.objects.create_user(username=email, email=email, password=password, first_name=name)
             login(request, user)
             return redirect('inicio')
 
@@ -67,6 +63,9 @@ def reservar_espacio(request):
             if conflictos.exists():
                 messages.error(request, 'Ya hay una reserva en ese horario.')
             else:
+                # Opcional: si el usuario está logueado, usa su correo
+                if request.user.is_authenticated:
+                    reserva.nombre_usuario = request.user.email
                 reserva.save()
                 guardar_reserva_en_archivo(reserva)
                 messages.success(request, 'Reserva realizada con éxito.')
@@ -100,12 +99,9 @@ def eliminar_reserva(request):
 
 def ver_reservas(request):
     correo_usuario = request.GET.get('correo', '')
-    
-    # Obtener mes y año de parámetros GET o usar actuales
     year = int(request.GET.get('year', date.today().year))
     month = int(request.GET.get('month', date.today().month))
 
-    # Validar mes y año
     if not (1 <= month <= 12 and 1900 <= year <= 2100):
         year = date.today().year
         month = date.today().month
@@ -126,7 +122,6 @@ def ver_reservas(request):
     mes_nombre = meses[month - 1]
 
     primer_dia_semana, dias_en_mes = monthrange(year, month)
-
     reservas_mes = Reserva.objects.filter(fecha__year=year, fecha__month=month).order_by('hora_inicio')
 
     semanas = []
