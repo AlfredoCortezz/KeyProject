@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import SchedulerSalas from '../../components/SchedulerSalas'; // 👈 importa el nuevo componente
 
 const Reservas: React.FC = () => {
   const reservas = [
@@ -88,7 +87,6 @@ const Reservas: React.FC = () => {
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">
           Disponibilidad de salas
         </h2>
-        <SchedulerSalas />
       </div>
     </div>
   );
