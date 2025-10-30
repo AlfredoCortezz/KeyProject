@@ -13,12 +13,12 @@ const Layout: React.FC<LayoutProps> = ({ children, title = "Sistema de Reservas 
 
   return (
     <div className="min-h-screen bg-[#E5E5E8] flex flex-col"> {/* Cloud Gray */}
-      {/* Header con tu paleta de colores */}
-      <header className="bg-gradient-to-r from-[#006DFF] to-[#8E4BFB] text-white shadow-lg"> {/* LCD Blue to Ultra Violet */}
+      {/* Header con azul sólido */}
+      <header className="bg-[#006DFF] text-white shadow-lg"> {/* LCD Blue sólido */}
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between">
             <Link to="/" className="text-2xl font-bold mb-2 md:mb-0 hover:opacity-80 transition flex items-center">
-              <span className="bg-[#F5F500] text-[#000] px-2 py-1 rounded-lg mr-2">⚡</span> 
+              <img src="/keyblanco.png" alt="Logo" className="h-8 w-8 mr-2" />
               Reservas de Salas
             </Link>
             

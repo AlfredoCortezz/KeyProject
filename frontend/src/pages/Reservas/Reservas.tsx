@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import SchedulerSalas from '../../components/SchedulerSalas';
 
 const Reservas: React.FC = () => {
   const reservas = [
@@ -57,9 +58,11 @@ const Reservas: React.FC = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      reserva.estado === 'confirmada' ? 'bg-green-100 text-green-800' :
-                      reserva.estado === 'pendiente' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-blue-100 text-blue-800'
+                      reserva.estado === 'confirmada'
+                        ? 'bg-green-100 text-green-800'
+                        : reserva.estado === 'pendiente'
+                        ? 'bg-yellow-100 text-yellow-800'
+                        : 'bg-blue-100 text-blue-800'
                     }`}>
                       {reserva.estado}
                     </span>
@@ -87,6 +90,9 @@ const Reservas: React.FC = () => {
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">
           Disponibilidad de salas
         </h2>
+
+        {/* 👇 Aquí renderizamos el calendario */}
+        <SchedulerSalas />
       </div>
     </div>
   );
