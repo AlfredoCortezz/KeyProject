@@ -1,13 +1,40 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import SchedulerSalas from '../../components/SchedulerSalas';
+import api from '../../api/axiosConfig'; // 👈 Importamos la instancia de Axios
+
+interface Reserva {
+  id: number;
+  nombre_estudiante: string;
+  fecha: string;
+  estado: string;
+}
 
 const Reservas: React.FC = () => {
-  const reservas = [
-    { id: 1, cliente: 'Juan Pérez', fecha: '2024-01-15', estado: 'confirmada' },
-    { id: 2, cliente: 'María García', fecha: '2024-01-16', estado: 'pendiente' },
-    { id: 3, cliente: 'Carlos López', fecha: '2024-01-14', estado: 'completada' },
-  ];
+  const [reservas, setReservas] = useState<Reserva[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // 🔹 useEffect: se ejecuta cuando el componente se monta
+  useEffect(() => {
+    const fetchReservas = async () => {
+      try {
+        const response = await api.get('reservas/'); // GET a Django
+        setReservas(response.data); // Guardamos la data en el estado
+      } catch (err) {
+        console.error('Error al obtener reservas:', err);
+        setError('No se pudieron cargar las reservas.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReservas();
+  }, []);
+
+  // 🔸 Manejamos estados de carga o error
+  if (loading) return <p className="text-gray-500">Cargando reservas...</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
 
   return (
     <div className="space-y-6">
@@ -31,7 +58,7 @@ const Reservas: React.FC = () => {
                   ID
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Cliente
+                  nombre_estudiante
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Fecha
@@ -45,41 +72,49 @@ const Reservas: React.FC = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {reservas.map((reserva) => (
-                <tr key={reserva.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {reserva.id}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {reserva.cliente}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {reserva.fecha}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      reserva.estado === 'confirmada'
-                        ? 'bg-green-100 text-green-800'
-                        : reserva.estado === 'pendiente'
-                        ? 'bg-yellow-100 text-yellow-800'
-                        : 'bg-blue-100 text-blue-800'
-                    }`}>
-                      {reserva.estado}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <Link 
-                      to={`/reservas/editar/${reserva.id}`}
-                      className="text-blue-600 hover:text-blue-900 mr-3"
-                    >
-                      Editar
-                    </Link>
-                    <button className="text-red-600 hover:text-red-900">
-                      Eliminar
-                    </button>
+              {reservas.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="text-center py-4 text-gray-500">
+                    No hay reservas registradas.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                reservas.map((reserva) => (
+                  <tr key={reserva.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {reserva.id}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {reserva.nombre_estudiante}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {reserva.fecha}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        reserva.estado === 'confirmada'
+                          ? 'bg-green-100 text-green-800'
+                          : reserva.estado === 'pendiente'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-blue-100 text-blue-800'
+                      }`}>
+                        {reserva.estado}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <Link 
+                        to={`/reservas/editar/${reserva.id}`}
+                        className="text-blue-600 hover:text-blue-900 mr-3"
+                      >
+                        Editar
+                      </Link>
+                      <button className="text-red-600 hover:text-red-900">
+                        Eliminar
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -91,7 +126,6 @@ const Reservas: React.FC = () => {
           Disponibilidad de salas
         </h2>
 
-        {/* 👇 Aquí renderizamos el calendario */}
         <SchedulerSalas />
       </div>
     </div>

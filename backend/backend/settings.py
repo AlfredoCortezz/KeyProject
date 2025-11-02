@@ -37,9 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    ##framework
     'corsheaders',
     'rest_framework',
+    #apps
     'apps.api',
+    'apps.reservas',
+    'apps.usuarios',
 ]
 
 MIDDLEWARE = [
@@ -54,7 +58,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
+    "http://localhost:3000", # React dev server
     "http://127.0.0.1:3000",
 ]
 
